@@ -132,16 +132,50 @@ Release Firefox only installs Mozilla-signed add-ons permanently. There are thre
    reloaded each time. (You can pick `dist-firefox/manifest.json` instead of the zip, **except with Flatpak Firefox**:
    the Flatpak file picker only shares the single selected file, so the extension loads but shows a blank UI. The zip
    doesn't have this problem.)
-2. **Sign as "unlisted" on addons.mozilla.org (recommended for release Firefox):** create an AMO account, get an API
-   key at <https://addons.mozilla.org/developers/addon/api/key/>, then:
-   ```bash
-   npx web-ext sign --source-dir dist-firefox --channel unlisted --api-key <JWT issuer> --api-secret <JWT secret>
-   ```
-   You get back a signed `.xpi` you can install permanently. *Unlisted* add-ons are **not** shown publicly on AMO;
-   Mozilla only receives the extension source for automated review, never your data.
+2. **Sign as "unlisted" on addons.mozilla.org (recommended for release Firefox):** see
+   [Signing for permanent install](#signing-for-permanent-install) below.
 3. **Firefox Developer Edition / Nightly:** set `xpinstall.signatures.required = false` in `about:config`, zip the
    contents of `dist-firefox/` (`cd dist-firefox && zip -r ../mail-pulse.xpi .`), then install from `about:addons` →
    ⚙ → *Install Add-on From File…*.
+
+### Signing for permanent install
+
+*Unlisted* add-ons are **not** shown publicly on addons.mozilla.org (AMO); Mozilla only receives the extension source
+for automated review, never your data.
+
+1. **Set a unique add-on ID** in `.env`. Every ID on AMO must be unique, so don't keep the default
+   `mail-pulse@personal.local`:
+   ```
+   FIREFOX_ADDON_ID=mail-pulse@your-name.local
+   ```
+   Keep this ID **forever**: changing it creates a different add-on and a new redirect URI.
+2. **Get an AMO API key:** create an AMO account, then generate a key at
+   <https://addons.mozilla.org/developers/addon/api/key/> (*JWT issuer* + *JWT secret*).
+3. **Build and sign:**
+   ```bash
+   npm run build:firefox
+   npx web-ext sign --source-dir dist-firefox --channel unlisted \
+     --api-key <JWT issuer> --api-secret <JWT secret>
+   ```
+   The signed `.xpi` is saved in `web-ext-artifacts/`.
+4. **Install:** drag the `.xpi` into Firefox, or `about:addons` → ⚙ → *Install Add-on From File…*. It now survives
+   restarts.
+5. **Register the redirect URI:** open **Settings → Accounts → OAuth configuration info**
+   (*Cài đặt → Tài khoản → Thông tin cấu hình OAuth*), copy the `http://127.0.0.1/mozoauth2/...` URI, and add it to
+   *Authorized redirect URIs* of your OAuth client in Google Cloud ([step 1.5](#1-google-cloud-setup)).
+
+### Updating a signed install
+
+Unlisted add-ons don't auto-update. To install a newer build:
+
+1. **Bump the version** in `src/manifest.ts` (`version: '0.1.0'` → `'0.1.1'`). AMO rejects a version it has already
+   signed (*"Version already exists"*), so every signing needs a higher version — even for tiny changes.
+2. **Rebuild and sign** with the same commands as above.
+3. **Install the new `.xpi`** from `web-ext-artifacts/` the same way. Firefox upgrades the existing add-on in place;
+   accounts, settings, and templates are kept. No need to uninstall first.
+
+Keep `FIREFOX_ADDON_ID` unchanged — a different ID installs a second, separate add-on. Check the installed version at
+`about:addons` → Mail Pulse.
 
 ### After installing
 
@@ -181,6 +215,10 @@ The **Alt+Shift+M** shortcut can be changed at `chrome://extensions/shortcuts` o
 | Badge shows `!` | An account needs re-authentication (password change, access revoked, expired token). Click **Re-login** (*Đăng nhập lại*) in Settings → Accounts. |
 | Account added by an older version (implicit flow) | Click **Re-login** once to obtain a refresh token. |
 | Extension won't load / blank UI on Linux | See [Flatpak browsers](#linux-flatpak-browsers); in Firefox, load the zip instead of `manifest.json`. |
-| Firefox add-on disappears after restart | Temporary add-ons are removed on exit. Sign it as unlisted (option 2) for a permanent install. |
+| Firefox add-on disappears after restart | Temporary add-ons are removed on exit. [Sign it as unlisted](#signing-for-permanent-install) for a permanent install. |
+| `web-ext sign` fails with "Version already exists" | Bump `version` in `src/manifest.ts`, rebuild, and sign again. |
+| `web-ext sign` says the add-on ID is taken / not owned by you | Choose a unique `FIREFOX_ADDON_ID` in `.env` (and register the new redirect URI in Google Cloud). |
+| New `.xpi` installed as a second Mail Pulse | `FIREFOX_ADDON_ID` changed between builds. Restore the original ID and remove the duplicate. |
+| Firefox says the file is corrupt / unsigned | Install the `.xpi` from `web-ext-artifacts/`, not a zip of `dist-firefox/`. |
 
 To revoke Mail Pulse's access at any time: <https://myaccount.google.com/permissions>.
