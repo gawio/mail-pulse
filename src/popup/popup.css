@@ -1,0 +1,77 @@
+/* Popup: kích thước cố định (trình duyệt giới hạn tối đa ~800×600), body là vùng cuộn. */
+html:not(.in-tab) body { width: 420px; height: 580px; overflow-y: auto; }
+html.in-tab body { max-width: 720px; margin: 0 auto; }
+.app { display: flex; flex-direction: column; min-height: 100%; }
+.center { justify-content: center; text-align: center; padding: 16px; }
+.empty { min-height: 400px; align-items: center; }
+.wrap { flex-wrap: wrap; }
+
+.account-bar { padding: 8px; gap: 4px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 5; overflow-x: auto; }
+.acc-chip { border-radius: 999px; padding: 3px 10px; background: transparent; position: relative; }
+.avatar-chip { padding: 2px; border-color: transparent; }
+.avatar-chip[aria-pressed='true'] { border-color: var(--accent); background: var(--accent-soft); }
+.reauth-dot { position: absolute; top: 0; right: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--danger); }
+.app > .banner { margin: 6px 8px 0; }
+.app > .tabs { padding: 0 8px; }
+.content { flex: 1; }
+
+/* Inbox */
+.inbox-list { gap: 0; }
+.search { padding: 8px; }
+.toolbar { padding: 4px 8px 4px 14px; min-height: 36px; border-bottom: 1px solid var(--border); gap: 4px; }
+.toolbar button { padding: 3px 8px; }
+.mail-list { list-style: none; margin: 0; padding: 0; }
+.mail-row { display: flex; align-items: flex-start; gap: 6px; padding: 8px 8px 8px 14px; border-bottom: 1px solid var(--border); position: relative; }
+.mail-row > input { margin-top: 3px; }
+.mail-row:hover { background: var(--bg-hover); }
+.mail-row.selected { background: var(--accent-soft); }
+.mail-main { flex: 1; min-width: 0; text-align: left; background: transparent; border: none; padding: 0; border-radius: 0; display: flex; flex-direction: column; gap: 1px; }
+.mail-main:hover:not(:disabled) { background: transparent; }
+.mail-row .from, .mail-row .subject { color: var(--fg-muted); }
+.mail-row.unread .from, .mail-row.unread .subject { color: var(--fg); font-weight: 600; }
+.mail-row.unread::before { content: ''; position: absolute; left: 4px; top: 14px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.row-actions { display: none; position: absolute; right: 6px; top: 6px; background: var(--bg-hover); border-radius: 6px; }
+.mail-row:hover .row-actions, .mail-row:focus-within .row-actions { display: flex; }
+.mail-row:hover .time { visibility: hidden; }
+.row-actions .btn { text-decoration: none; padding: 4px 7px; }
+.load-more { margin: 12px auto; display: block; }
+
+/* Message view */
+.message-view { padding: 0 0 16px; gap: 8px; }
+.message-view > :not(.toolbar):not(.mail-frame) { margin-left: 12px; margin-right: 12px; }
+.message-view .toolbar { padding-left: 4px; position: sticky; top: 47px; background: var(--bg); z-index: 4; }
+.message-view .toolbar .btn { text-decoration: none; }
+.msg-subject { font-size: 16px; line-height: 1.3; margin: 4px 0 0; overflow-wrap: anywhere; }
+.msg-head { display: flex; align-items: center; gap: 4px; }
+.msg-from { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; text-align: left; background: transparent; border: none; padding: 4px 6px; margin-left: -6px; border-radius: 6px; }
+.msg-from:hover:not(:disabled) { background: var(--bg-hover); }
+.nowrap { white-space: nowrap; flex: none; }
+.msg-details { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-radius: 6px; background: var(--bg-elev); overflow-wrap: anywhere; }
+.img-notice { padding: 2px 0; }
+button.linkish { background: none; border: none; padding: 0; color: var(--accent); text-decoration: underline; font: inherit; cursor: pointer; }
+.mail-frame { width: 100%; border: none; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); min-height: 80px; display: block; }
+.mail-frame.html { background: #fff; }
+.reply-bar { gap: 6px; padding-top: 4px; }
+.attachments { gap: 6px; }
+.attachment { border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; }
+
+/* Calendar */
+.calendar { gap: 0; }
+.calendar > .card, .calendar > .banner { margin: 8px; }
+.cal-day { padding: 6px 8px 8px; border-bottom: 1px solid var(--border); }
+.cal-day h3 { font-size: 12px; text-transform: none; color: var(--fg-muted); margin: 4px 4px 6px; }
+.cal-day h3.today { color: var(--accent); }
+.cal-empty { padding: 0 4px 4px; }
+.cal-event { display: flex; align-items: baseline; gap: 8px; width: 100%; text-align: left; border: none; border-left: 3px solid var(--accent);
+  border-radius: 4px; background: var(--bg-elev); padding: 6px 8px; margin-bottom: 4px; }
+.cal-time { flex: none; min-width: 92px; font-variant-numeric: tabular-nums; }
+.cal-title { flex: 1; min-width: 0; }
+.event-detail .detail-body { padding: 8px 12px 16px; gap: 10px; overflow-wrap: anywhere; }
+.event-detail .toolbar .btn { text-decoration: none; }
+.meet-btn { display: inline-block; text-decoration: none; margin-bottom: 4px; }
+.att-status { width: 16px; text-align: center; flex: none; }
+.att-status.accepted { color: #2b8a3e; }
+.att-status.declined { color: var(--danger); }
+.description { white-space: pre-wrap; border-top: 1px solid var(--border); padding-top: 8px; }
+.quick-create { gap: 8px; }
+.quick-create input[type='datetime-local'] { min-width: 190px; }

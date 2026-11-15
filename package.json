@@ -1,0 +1,30 @@
+{
+  "name": "mail-pulse",
+  "version": "0.1.0",
+  "description": "Gmail + Google Calendar mini client (Chrome MV3), privacy-first",
+  "scripts": {
+    "gen-key": "node scripts/gen-key.mjs",
+    "dev": "vite build --watch --mode development",
+    "dev:firefox": "vite build --watch --mode firefox-dev",
+    "build": "tsc --noEmit && vite build",
+    "build:firefox": "tsc --noEmit && vite build --mode firefox",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "package:firefox": "npm run build:firefox && rm -f mail-pulse-firefox.zip && cd dist-firefox && python3 -m zipfile -c ../mail-pulse-firefox.zip .",
+    "package:edge": "npm run build && rm -f mail-pulse-edge.zip && cd dist && python3 -m zipfile -c ../mail-pulse-edge.zip ."
+  },
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "preact": "^10.29.8"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "@types/chrome": "^0.3.7",
+    "@types/node": "^24.19.2",
+    "typescript": "^7.0.2",
+    "vite": "^6.4.6",
+    "vitest": "^5.1.0"
+  },
+  "private": true
+}

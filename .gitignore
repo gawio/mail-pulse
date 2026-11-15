@@ -1,0 +1,9 @@
+node_modules/
+dist/
+dist-firefox/
+*.xpi
+*.zip
+.env
+key.pem
+*.local
+note.txt

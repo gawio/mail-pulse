@@ -1,0 +1,30 @@
+.settings { display: flex; min-height: 100vh; }
+.settings-nav { width: 200px; padding: 20px 12px; border-right: 1px solid var(--border); background: var(--bg-elev); gap: 2px; }
+.settings-nav h1 { padding: 0 8px 12px; }
+.settings-nav a { color: var(--fg); text-decoration: none; padding: 6px 8px; border-radius: 6px; }
+.settings-nav a:hover { background: var(--bg-hover); }
+.settings-nav a[aria-current='page'] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.settings-main { flex: 1; padding: 24px 32px; max-width: 760px; }
+.settings-main section { gap: 12px; }
+.field { display: grid; grid-template-columns: 200px 1fr; gap: 12px; align-items: center; }
+.field > :first-child { color: var(--fg-muted); }
+@media (max-width: 640px) {
+  .settings { flex-direction: column; }
+  .settings-nav { width: auto; flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 1px solid var(--border); }
+  .settings-main { padding: 16px; }
+  .field { grid-template-columns: 1fr; gap: 4px; }
+}
+.template-form { gap: 10px; }
+.template-editor { display: flex; min-height: 220px; }
+.template-editor .editor-wrap { flex: 1; background: var(--bg); }
+.segmented-group { gap: 0; }
+.segmented-group button { border-radius: 0; margin-left: -1px; }
+.segmented-group button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.segmented-group button:last-child { border-radius: 0 6px 6px 0; }
+.accent-list { gap: 10px; flex-wrap: wrap; }
+.accent-swatch { width: 28px; height: 28px; border-radius: 50%; padding: 0; border: 2px solid transparent; box-shadow: 0 0 0 1px var(--border); }
+.accent-swatch:hover:not(:disabled) { filter: brightness(1.1); }
+.accent-swatch[aria-checked='true'] { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--fg); }
+.preview { background: var(--bg); }
+.copyable { display: block; user-select: all; padding: 6px 8px; margin-top: 4px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; font-family: var(--mono); overflow-wrap: anywhere; }
+details summary { cursor: pointer; }
